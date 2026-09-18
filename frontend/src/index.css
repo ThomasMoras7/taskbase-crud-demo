@@ -1,0 +1,45 @@
+:root {
+  font-family: Roboto, system-ui, 'Segoe UI', Arial, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+
+  --color-background: #f6f8fa;
+  --color-surface: #ffffff;
+  --color-surface-hover: #e8f0fe;
+  --color-danger-surface: #fce8e6;
+
+  --color-primary: #1a73e8;
+  --color-primary-hover: #185abc;
+  --color-danger: #c5221f;
+  --color-on-primary: #ffffff;
+
+  --color-text-primary: #1f1f1f;
+  --color-text-secondary: #5f6368;
+  --color-text-muted: #80868b;
+
+  --color-border: #dadce0;
+  --color-border-item: #e2e5e9;
+
+  --shadow-focus: 0 0 0 3px rgba(26, 115, 232, 0.2);
+  --shadow-fab: 0 2px 6px rgba(0, 0, 0, 0.2);
+  --shadow-fab-hover: 0 4px 8px rgba(0, 0, 0, 0.25);
+  --shadow-item: 0 1px 2px rgba(0, 0, 0, 0.08);
+
+  color: var(--color-text-primary);
+  background-color: var(--color-background);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+button,
+input {
+  font: inherit;
+}
