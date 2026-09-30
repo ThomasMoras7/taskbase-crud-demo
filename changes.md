@@ -26,3 +26,11 @@
 - `POST /api/task` now only reads `title` from the body and always stores `done = false`; a client sending `done: true` is ignored, where the in-memory version stored it.
 - Tasks still vanish on restart: the default datasource is embedded in-memory H2 with `create-drop`, and no PostgreSQL `spring.datasource.*` configuration exists yet.
 - Invalidates: `docs/API-TaskController.md` (whole page: handlers, flow, error handling, static state removed), `docs/Architecture.md` (package layout, persistence path), `docs/DataStructure.md` (in-memory list replaced by the persisted entity), `docs/Features.md` (data no longer lost on restart is now false again / storage description)
+
+## Profile-based configuration
+
+- Replaced `backend/src/main/resources/application.properties` with `application.yml` (application name, `open-in-view: false`, default profile `dev` overridable by `SPRING_PROFILES_ACTIVE`) plus `application-dev.yml` (in-memory H2 named `taskbase`, `create-drop`, H2 console at `/h2-console`) and `application-prod.yml` (PostgreSQL from `DB_HOST`/`DB_PORT`/`DB_NAME`/`DB_USERNAME`/`DB_PASSWORD`, `ddl-auto: update`).
+- The dev H2 database is now named instead of auto-generated, so the same URL and H2 console session are reused across restarts. `open-in-view: false` clears the startup warning and closes the persistence context at the end of each request; the `Task` entity has no lazy relations, so serialisation is unaffected.
+- Verified: `mvnw test` boots the dev profile; the prod profile resolves the PostgreSQL URL and driver, failing only with `Connection refused` since no local server is running.
+- `ddl-auto: update` lets Hibernate create the `task` table on PostgreSQL. Flyway or equivalent is the proper answer once schemas need versioning.
+- Invalidates: `docs/Architecture.md` (configuration files, datasource per profile), `docs/Features.md` (H2 console mention)

@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:taskbase}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME:taskbase}
+    password: ${DB_PASSWORD:taskbase}
+  jpa:
+    hibernate:
+      ddl-auto: update
