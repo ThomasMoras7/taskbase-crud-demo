@@ -34,3 +34,9 @@
 - Verified: `mvnw test` boots the dev profile; the prod profile resolves the PostgreSQL URL and driver, failing only with `Connection refused` since no local server is running.
 - `ddl-auto: update` lets Hibernate create the `task` table on PostgreSQL. Flyway or equivalent is the proper answer once schemas need versioning.
 - Invalidates: `docs/Architecture.md` (configuration files, datasource per profile), `docs/Features.md` (H2 console mention)
+
+## CORS accepts any local port
+
+- `CorsConfig` now uses `allowedOriginPatterns` with `http://localhost:[*]` and `http://127.0.0.1:[*]` instead of the fixed `http://localhost:5173`. A Vite dev server started while 5173 is already taken binds 5174, and the browser then sends an `Origin` the backend rejected, turning every `/api` call into a 403 `Invalid CORS request`.
+- Pattern matching keeps `localhost` and `127.0.0.1` restricted; no non-local origin is accepted, and `allowCredentials` stays off.
+- Invalidates: `docs/Architecture.md` (CORS configuration)
