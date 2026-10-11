@@ -1,12 +1,12 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:taskbase
+    url: jdbc:h2:file:./data/taskbase
     driver-class-name: org.h2.Driver
     username: sa
     password: ""
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
   h2:
     console:
       enabled: true

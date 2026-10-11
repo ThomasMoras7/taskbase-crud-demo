@@ -40,3 +40,12 @@
 - `CorsConfig` now uses `allowedOriginPatterns` with `http://localhost:[*]` and `http://127.0.0.1:[*]` instead of the fixed `http://localhost:5173`. A Vite dev server started while 5173 is already taken binds 5174, and the browser then sends an `Origin` the backend rejected, turning every `/api` call into a 403 `Invalid CORS request`.
 - Pattern matching keeps `localhost` and `127.0.0.1` restricted; no non-local origin is accepted, and `allowCredentials` stays off.
 - Invalidates: `docs/Architecture.md` (CORS configuration)
+
+## Tasks persist across restarts
+
+- The dev profile now stores tasks in a file-backed H2 database, `jdbc:h2:file:./data/taskbase`, with `ddl-auto: update` instead of `jdbc:h2:mem:taskbase` with `create-drop`. `create-drop` was rebuilding an empty schema on every boot, which is why tasks vanished on restart; `update` keeps the existing rows and only creates what is missing. The database lands in `backend/data/`, added to `backend/.gitignore`.
+- Added `backend/src/test/resources/application.yml` pinning tests to `jdbc:h2:mem:testdb` with `create-drop`. The test-classes copy of `application.yml` shadows the main one, so tests neither activate the `dev` profile nor touch the file database.
+- Verified: a task POSTed to a throwaway instance on port 8090 is still returned by a second instance started on the same database file; `mvnw test` boots on `jdbc:h2:mem:testdb` and creates no `data/` directory.
+- The H2 console URL changes with the datasource: `/h2-console` now connects to a JDBC URL of `jdbc:h2:file:./data/taskbase` instead of a `mem:taskbase` URL.
+- Schema changes are still not versioned, so a future column change on an existing file has no migration path. `ddl-auto: update` will silently leave an incompatible schema in place.
+- Invalidates: `docs/Features.md` (tasks are no longer lost on restart), `docs/Architecture.md` (dev datasource is file-backed, tests use their own config), `docs/DataStructure.md` (storage lifecycle), `docs/Optimisations.md` (migration tooling still missing)
